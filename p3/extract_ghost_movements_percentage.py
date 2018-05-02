@@ -40,7 +40,7 @@ for line in file:
 		#print ("previous %s \n current %s" % (previous, line))
 		result = True;
 		for i in range(0, len(m)):
-			result = (m[i] >= 0) and result
+			result = (m[i] >= -1 and m[i] <= 1 ) and result
 		if((previous != "") and (m >= 0 )):
 			'''PacmanPos
 			m.group(1), m[0]'''
@@ -99,8 +99,12 @@ for line in file:
 	
    	#print line,
 
-fcounter = float(counter);
+#fcounter = float(counter);
+fcounter = float(upG0 + downG0 + leftG0 + rightG0)
 print("Ghost 0 up %f down: %f left: %f right: %f\n" %((upG0/fcounter),(downG0/fcounter),(leftG0/fcounter), (rightG0/fcounter) ))
+fcounter = float(upG1 + downG1 + leftG1 + rightG1)
 print("Ghost 1 up %f down: %f left: %f right: %f\n" %((upG1/fcounter),(downG1/fcounter),(leftG1/fcounter), (rightG1/fcounter) ))
+fcounter = float(upG2 + downG2 + leftG2 + rightG2)
 print("Ghost 2 up %f down: %f left: %f right: %f\n" %((upG2/fcounter),(downG2/fcounter),(leftG2/fcounter), (rightG2/fcounter) ))
+fcounter = float(upG3 + downG3 + leftG3 + rightG3)
 print("Ghost 3 up %f down: %f left: %f right: %f\n" %((upG3/fcounter),(downG3/fcounter),(leftG3/fcounter), (rightG3/fcounter) ))
