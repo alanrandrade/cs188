@@ -33,6 +33,8 @@ class QLearningAgent(ReinforcementAgent):
         which returns legal actions
         for a state
   """
+  
+
   def __init__(self, **args):
     "You can initialize Q-values here..."
     ReinforcementAgent.__init__(self, **args)
@@ -176,6 +178,19 @@ class ApproximateQAgent(PacmanQAgent):
     """
     "*** YOUR CODE HERE ***"
     features = self.featExtractor.getFeatures(state, action)
+    ghosts = state.getGhostPositions()
+    x, y = state.getPacmanPosition()
+
+    f = open("guru99.txt","a");
+    f.write("PacmanPos %d, %d\n" % (x, y));
+    for i in range(0, len(ghosts)):
+      px, py = ghosts[i]
+      f.write("GhostPos %d %d, %d\n" % (i, px, py) );
+    f.write("-------------------\n")
+    f.close();
+
+
+
     Q = 0
     for f, v in features.items():
         Q += self.W[f] * v

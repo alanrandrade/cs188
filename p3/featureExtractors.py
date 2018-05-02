@@ -63,6 +63,10 @@ class SimpleExtractor(FeatureExtractor):
     walls = state.getWalls()
     ghosts = state.getGhostPositions()
 
+    f = open("guru99.txt","w+");
+    f.write("This is line 2\r\n")
+    f.close();
+
     features = util.Counter()
     
     features["bias"] = 1.0
@@ -71,6 +75,12 @@ class SimpleExtractor(FeatureExtractor):
     x, y = state.getPacmanPosition()
     dx, dy = Actions.directionToVector(action)
     next_x, next_y = int(x + dx), int(y + dy)
+
+    # features["PacmanPositionX"] = x;
+    # features["PacmanPositionY"] = y;
+    # for s in self.getGhostStates():
+    #   features["ghosts"]s.getPosition()
+    
     
     # count the number of ghosts 1-step away
     features["#-of-ghosts-1-step-away"] = sum((next_x, next_y) in Actions.getLegalNeighbors(g, walls) for g in ghosts)
