@@ -244,6 +244,11 @@ class GameState:
     Creates an initial game state from a layout array (see layout.py).
     """
     self.data.initialize(layout, numGhostAgents)
+    
+    f = open("ghost_movements.csv","a");
+    f.write("\n\n")
+    f.close();
+
 
 ############################################################################
 #                     THE HIDDEN SECRETS OF PACMAN                         #
