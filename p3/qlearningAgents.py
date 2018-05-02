@@ -186,7 +186,7 @@ class ApproximateQAgent(PacmanQAgent):
     for i in range(0, len(ghosts)):
       px, py = ghosts[i]
       f.write("GhostPos %d %d, %d\n" % (i, px, py) );
-    f.write("-------------------\n")
+    f.write("------\n")
     f.close();
 
 
