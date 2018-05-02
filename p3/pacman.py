@@ -330,6 +330,17 @@ class PacmanRules:
     """
     Edits the state to reflect the results of the action.
     """
+    ghosts = state.getGhostPositions()
+    x, y = state.getPacmanPosition()
+
+    f = open("guru99.txt","a");
+    f.write("PacmanPos, %d, %d, " % (x, y));
+    for i in range(0, len(ghosts)):
+      px, py = ghosts[i]
+      f.write("Ghost%dPos, %d, %d, " % (i, px, py) );
+    f.write("\n")
+    f.close();
+
     legal = PacmanRules.getLegalActions( state )
     if action not in legal:
       raise Exception("Illegal action " + str(action))

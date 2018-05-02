@@ -178,19 +178,6 @@ class ApproximateQAgent(PacmanQAgent):
     """
     "*** YOUR CODE HERE ***"
     features = self.featExtractor.getFeatures(state, action)
-    ghosts = state.getGhostPositions()
-    x, y = state.getPacmanPosition()
-
-    f = open("guru99.txt","a");
-    f.write("PacmanPos, %d, %d, " % (x, y));
-    for i in range(0, len(ghosts)):
-      px, py = ghosts[i]
-      f.write("Ghost%dPos, %d, %d, " % (i, px, py) );
-    f.write("\n")
-    f.close();
-
-
-
     Q = 0
     for f, v in features.items():
         Q += self.W[f] * v
