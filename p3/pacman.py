@@ -244,6 +244,11 @@ class GameState:
     Creates an initial game state from a layout array (see layout.py).
     """
     self.data.initialize(layout, numGhostAgents)
+    
+    f = open("ghost_movements.csv","a");
+    f.write("\n\n")
+    f.close();
+
 
 ############################################################################
 #                     THE HIDDEN SECRETS OF PACMAN                         #
@@ -333,11 +338,11 @@ class PacmanRules:
     ghosts = state.getGhostPositions()
     x, y = state.getPacmanPosition()
 
-    f = open("guru99.txt","a");
-    f.write("PacmanPos, %d, %d, " % (x, y));
+    f = open("ghost_movements.csv","a");
+    #f.write("PacmanPos, %d, %d, " % (x, y));
     for i in range(0, len(ghosts)):
       px, py = ghosts[i]
-      f.write("Ghost%dPos, %d, %d, " % (i, px, py) );
+      f.write("%d, %d, " % (px, py) );
     f.write("\n")
     f.close();
 
