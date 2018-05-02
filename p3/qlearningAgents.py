@@ -182,11 +182,11 @@ class ApproximateQAgent(PacmanQAgent):
     x, y = state.getPacmanPosition()
 
     f = open("guru99.txt","a");
-    f.write("PacmanPos %d, %d\n" % (x, y));
+    f.write("PacmanPos, %d, %d, " % (x, y));
     for i in range(0, len(ghosts)):
       px, py = ghosts[i]
-      f.write("GhostPos %d %d, %d\n" % (i, px, py) );
-    f.write("------\n")
+      f.write("Ghost%dPos, %d, %d, " % (i, px, py) );
+    f.write("\n")
     f.close();
 
 
