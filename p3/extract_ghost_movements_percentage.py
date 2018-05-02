@@ -40,7 +40,7 @@ for line in file:
 		#print ("previous %s \n current %s" % (previous, line))
 		result = True;
 		for i in range(0, len(m)):
-			result = (m[i] >= -1 and m[i] <= 1 ) and result
+			result = ((m[i] >= -1) and (m[i] <= 1) ) and result
 		if((previous != "") and (m >= 0 )):
 			'''PacmanPos
 			m.group(1), m[0]'''
