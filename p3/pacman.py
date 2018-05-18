@@ -352,7 +352,7 @@ class PacmanRules:
     x, y = state.getPacmanPosition()
 
     f = open("ghost_movements.csv","a");
-    #f.write("PacmanPos, %d, %d, " % (x, y));
+    f.write("%d, %d, " % (x, y));
     for i in range(0, len(ghosts)):
       px, py = ghosts[i]
       f.write("%d, %d, " % (px, py) );
