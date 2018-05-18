@@ -14,22 +14,6 @@ filename = "ghost_movements.csv"
 file = open(filename, "r")
 previous = ""
 
-# leftG0 = 0
-# rightG0 = 0
-# upG0 = 0
-# downG0 = 0
-# leftG1 = 0
-# rightG1 = 0
-# upG1 = 0
-# downG1 = 0
-# leftG2 = 0
-# rightG2 = 0
-# upG2 = 0
-# downG2 = 0
-# leftG3 = 0
-# rightG3 = 0
-# upG3 = 0
-# downG3 = 0
 
 ArrayWithGhostCounters = np.zeros(shape = (NUMBER_OF_GHOSTS,4))
 
@@ -78,7 +62,7 @@ for line in file:
 
 		#print ("previous %s \n current %s" % (previous, line))
 		
-		if((len(r) and len(m) >0 and len(m) == len(r)) and (len(m) >= 0 )):
+		if( (len(r)>0 and len(m) >0 and len(m) == len(r)) ):
 			
 			'''Ghost0Pos'''
 			#print(m[0], r[0] )
