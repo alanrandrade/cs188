@@ -10,7 +10,7 @@ import numpy as np
 NUMBER_OF_GHOSTS = 4;
 NUMBER_OF_GAMES = 201;
 TRAINING_SESSIONS = 99;
-FIELD_OF_VIEW = 10;
+FIELD_OF_VIEW = 9;
 POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD = 4;
 
 filename = "ghost_movements.csv"
@@ -36,15 +36,12 @@ previous = ""
 
 ArrayWithGhostCounters = np.zeros(shape = (NUMBER_OF_GHOSTS,4))
 
-NEWArrayWithGhostCounters = np.zeros(shape=(FIELD_OF_VIEW*2,FIELD_OF_VIEW*2, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
+NEWArrayWithGhostCounters = np.zeros(shape=(FIELD_OF_VIEW*2 + 1,FIELD_OF_VIEW*2 + 1, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
 
 PercentagesOfGames = np.zeros(shape=(NUMBER_OF_GAMES - TRAINING_SESSIONS, FIELD_OF_VIEW*2,FIELD_OF_VIEW*2, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
 
 counter = 0
 training_counter = 0;
-
-print(NEWArrayWithGhostCounters.shape)
-print(PercentagesOfGames.shape)
 
 
 for line in file:
@@ -84,40 +81,38 @@ for line in file:
         #print ("previous %s \n current %s" % (previous, line))
         if(training_counter > TRAINING_SESSIONS):
             if((len(r) and len(m) >0 and len(m) == len(r)) and (len(m) >= 0 )):
-                
-                '''Ghost0Pos'''
-                #print(m[0], r[0] )
 
                 result = True;
                 for i in range(0, len(m)-1):
                         result = ((m[i] -r[i] >= -1) and (m[i] -r[i]<= 1) ) and result
                         
                 if(result):
-
-                    for i in range (0, NUMBER_OF_GHOSTS):
-                        #print(i, i*2, len(m), len(r))
+                    for i in range (1, NUMBER_OF_GHOSTS+1):
+                        
+                        locX = r[0] - r[i*2] + FIELD_OF_VIEW;
+                        locY = r[1] - r[1 + i*2] + FIELD_OF_VIEW;
+                        
                         if(m[i*2] != r[i*2]):
                             if((m[i*2] - r[i*2]) == 1):
                                 #0 is right
-                                ArrayWithGhostCounters[i][0] = ArrayWithGhostCounters[i][0] +1
+                                ArrayWithGhostCounters[locX][locY][i][0] = ArrayWithGhostCounters[locX][locY][i][0] +1
                                 #rightG0 = rightG0 + 1
                             elif((m[i*2] - r[i*2]) == -1):
                                 #1 is left
-                                ArrayWithGhostCounters[i][1] = ArrayWithGhostCounters[i][1] +1
+                                ArrayWithGhostCounters[locX][locY][i][1] = ArrayWithGhostCounters[locX][locY][i][1] +1
                                 #leftG0 = leftG0 + 1
 
                         if(m[i*2 -1] != r[i*2 -1]):
                             if((m[i*2 -1] - r[i*2 -1]) == 1):
                                 #2 is up
-                                ArrayWithGhostCounters[i][2] = ArrayWithGhostCounters[i][2] +1
+                                ArrayWithGhostCounters[locX][locY][i][2] = ArrayWithGhostCounters[locX][locY][i][2] +1
                                 #upG0 = upG0 + 1
                             elif((m[i*2 -1] - r[i*2 -1]) == -1):
                                 #3 is down
-                                ArrayWithGhostCounters[i][3] = ArrayWithGhostCounters[i][3] +1
+                                ArrayWithGhostCounters[locX][locY][i][3] = ArrayWithGhostCounters[locX][locY][i][3] +1
                                 #downG0 = downG0 + 1
 
     previous = line;
-	#print ("previous %s \n current %s" % (previous, line))
 	
    	#print line,
 allPositionsFromGhostsUp = np.zeros(shape=(4,211))
