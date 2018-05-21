@@ -8,8 +8,8 @@ import numpy as np
 # print(m[0])
 
 NUMBER_OF_GHOSTS = 4;
-NUMBER_OF_GAMES = 201;
-TRAINING_SESSIONS = 99;
+NUMBER_OF_GAMES = 150;
+TRAINING_SESSIONS = 50;
 FIELD_OF_VIEW = 9;
 ARRAY_FIELD_SIZE = FIELD_OF_VIEW*2 +1
 POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD = 4;
@@ -18,7 +18,7 @@ filename = "ghost_movements.csv"
 file = open(filename, "r")
 previous = ""
 
-ArrayWithGhostCounters = np.zeros(shape = (NUMBER_OF_GHOSTS,4))
+#ArrayWithGhostCounters = np.zeros(shape = (NUMBER_OF_GHOSTS,4))
 
 NEWArrayWithGhostCounters = np.zeros(shape=(ARRAY_FIELD_SIZE,ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
 
@@ -47,20 +47,31 @@ for line in file:
         
             if(training_counter > TRAINING_SESSIONS):
                 for j in range (0, NUMBER_OF_GHOSTS):
-                    total = ArrayWithGhostCounters[j][0] + ArrayWithGhostCounters[j][1] + ArrayWithGhostCounters[j][2] + ArrayWithGhostCounters[j][3]
-                    
-                    PercentagesOfGames[counter][j] = ArrayWithGhostCounters[j]
-                    for k in range (0, 4):
-                        PercentagesOfGames[counter][j][k] = ArrayWithGhostCounters[j][k]/float(total)
-                        print(PercentagesOfGames[counter][j][k])
+                    for p in range(0, ARRAY_FIELD_SIZE):
+                        for q in range(0,ARRAY_FIELD_SIZE):
                         
-                        #print('here')
+                            total = NEWArrayWithGhostCounters[p][q][j][0] + NEWArrayWithGhostCounters[p][q][j][1] + NEWArrayWithGhostCounters[p][q][j][2] + NEWArrayWithGhostCounters[p][q][j][3]
 
-                        ArrayWithGhostCounters[j][k] = 0;
-                    for k in range (0, 4):
-                        print('first',PercentagesOfGames[counter][j][k], ArrayWithGhostCounters[j][k]/float(total))
+                            #print('total', training_counter, p, q, j, total, NEWArrayWithGhostCounters[p][q][j][0], NEWArrayWithGhostCounters[p][q][j][0]/float(total))
+                            
+                            PercentagesOfGames[counter][p][q][j] = NEWArrayWithGhostCounters[p][q][j] 
+                            #PercentagesOfGames[counter][j] = ArrayWithGhostCounters[j]
+                            for k in range (0, 4):
+                                if(NEWArrayWithGhostCounters[p][q][j][k] > 0):
+                                    PercentagesOfGames[counter][p][q][j][k] = NEWArrayWithGhostCounters[p][q][j][k]/float(total)
+                                #print(PercentagesOfGames[counter][p][q][j][k])
+                                #PercentagesOfGames[counter][j][k] = ArrayWithGhostCounters[j][k]/float(total)
+                                
+                                
+                                #print('here')
 
-                counter = counter + 1
+                                NEWArrayWithGhostCounters[p][q][j][k] = 0;
+                            #for k in range (0, 4):
+                                #print('first',PercentagesOfGames[counter][p][q][j][k], NEWArrayWithGhostCounters[p][q][j][k]/float(total))
+
+                counter = counter +1
+            #training_counter = training_counter + 1
+            #print(training_counter)
 
         #print ("previous %s \n current %s" % (previous, line))
         if(training_counter > TRAINING_SESSIONS):
@@ -69,87 +80,122 @@ for line in file:
                 result = True;
                 for i in range(0, len(m)-1):
                         result = ((m[i] -r[i] >= -1) and (m[i] -r[i]<= 1) ) and result
+
+                #for i in range(1, NUMBER_OF_GHOSTS+1):
+                        #xdistance = r[0] - r[i*2] + FIELD_OF_VIEW;
+                        #ydistance = r[1] - r[1 + i*2] + FIELD_OF_VIEW;
+                        #print(xdistance,'(',r[0], r[i*2],')', ydistance, '(', r[1], r[1 + i*2], ')')
+                        #result = ((xdistance >= 0 and xdistance <= FIELD_OF_VIEW) and (ydistance >= 0 and ydistance <= FIELD_OF_VIEW)) and result
+                        #print(result)
                         
+                #print('off')
                 if(result):
                     for i in range (1, NUMBER_OF_GHOSTS+1):
                         
                         locX = r[0] - r[i*2] + FIELD_OF_VIEW;
                         locY = r[1] - r[1 + i*2] + FIELD_OF_VIEW;
-                        
-                        if(m[i*2] != r[i*2]):
-                            if((m[i*2] - r[i*2]) == 1):
-                                #0 is right
-                                ArrayWithGhostCounters[locX][locY][i][0] = ArrayWithGhostCounters[locX][locY][i][0] +1
-                                #rightG0 = rightG0 + 1
-                            elif((m[i*2] - r[i*2]) == -1):
-                                #1 is left
-                                ArrayWithGhostCounters[locX][locY][i][1] = ArrayWithGhostCounters[locX][locY][i][1] +1
-                                #leftG0 = leftG0 + 1
+                        #print(locX,'(',r[0], r[i*2],')', locY, '(', r[1], r[1 + i*2], ')')
+                        if(((locX < ARRAY_FIELD_SIZE and locX >= 0) and (locY < ARRAY_FIELD_SIZE and locY >= 0))):
 
-                        if(m[i*2 -1] != r[i*2 -1]):
-                            if((m[i*2 -1] - r[i*2 -1]) == 1):
-                                #2 is up
-                                ArrayWithGhostCounters[locX][locY][i][2] = ArrayWithGhostCounters[locX][locY][i][2] +1
-                                #upG0 = upG0 + 1
-                            elif((m[i*2 -1] - r[i*2 -1]) == -1):
-                                #3 is down
-                                ArrayWithGhostCounters[locX][locY][i][3] = ArrayWithGhostCounters[locX][locY][i][3] +1
-                                #downG0 = downG0 + 1
+                            #print(locX,'(',r[0], r[i*2],')', locY, '(', r[1], r[1 + i*2], ')')
+                            if(m[i*2] != r[i*2]):
+                                if((m[i*2] - r[i*2]) == 1):
+
+                                    #0 is right
+                                    NEWArrayWithGhostCounters[locX][locY][i-1][0] = NEWArrayWithGhostCounters[locX][locY][i-1][0] +1
+                                    #print('right',NEWArrayWithGhostCounters[locX][locY][i-1][0])
+                                    #rightG0 = rightG0 + 1
+                                elif((m[i*2] - r[i*2]) == -1):
+                                    #1 is left
+
+                                    NEWArrayWithGhostCounters[locX][locY][i-1][1] = NEWArrayWithGhostCounters[locX][locY][i-1][1] +1
+                                    #print('left',NEWArrayWithGhostCounters[locX][locY][i-1][1])
+                                    #leftG0 = leftG0 + 1
+
+                            if(m[i*2 -1] != r[i*2 -1]):
+                                if((m[i*2 -1] - r[i*2 -1]) == 1):
+                                    #2 is up
+                                    NEWArrayWithGhostCounters[locX][locY][i-1][2] = NEWArrayWithGhostCounters[locX][locY][i-1][2] +1
+                                    #print('up',NEWArrayWithGhostCounters[locX][locY][i-1][2])
+                                    #upG0 = upG0 + 1
+                                elif((m[i*2 -1] - r[i*2 -1]) == -1):
+                                    #3 is down
+                                    NEWArrayWithGhostCounters[locX][locY][i-1][3] = NEWArrayWithGhostCounters[locX][locY][i-1][3] +1
+                                    #print('down',NEWArrayWithGhostCounters[locX][locY][i-1][3])
+                                    #downG0 = downG0 + 1
 
     previous = line;
 	
    	#print line,
-allPositionsFromGhostsUp = np.zeros(shape=(4,211))
-allPositionsFromGhostsDown = np.zeros(shape=(4,211))
-allPositionsFromGhostsLeft = np.zeros(shape=(4,211))
-allPositionsFromGhostsRight = np.zeros(shape=(4,211))
+allPositionsFromGhostsUp = np.zeros(shape=(ARRAY_FIELD_SIZE,ARRAY_FIELD_SIZE,4,NUMBER_OF_GAMES - TRAINING_SESSIONS))
+allPositionsFromGhostsDown = np.zeros(shape=(ARRAY_FIELD_SIZE,ARRAY_FIELD_SIZE, 4,NUMBER_OF_GAMES - TRAINING_SESSIONS))
+allPositionsFromGhostsLeft = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4,NUMBER_OF_GAMES - TRAINING_SESSIONS))
+allPositionsFromGhostsRight = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4,NUMBER_OF_GAMES - TRAINING_SESSIONS))
 print('counter', counter)
-for i in range (0, NUMBER_OF_GAMES):
+for i in range (0, NUMBER_OF_GAMES - TRAINING_SESSIONS):
     for j in range (0, NUMBER_OF_GHOSTS):
-		# for k in range (0, 4):
-		# 	print(i, j, k, PercentagesOfGames[i][j][k])
-        allPositionsFromGhostsUp[j][i] = PercentagesOfGames[i][j][2]
-        allPositionsFromGhostsDown[j][i] = PercentagesOfGames[i][j][3]
-        allPositionsFromGhostsLeft[j][i] = PercentagesOfGames[i][j][0]
-        allPositionsFromGhostsRight[j][i] = PercentagesOfGames[i][j][1]
-#fcounter = float(counter);
+        for p in range(0, ARRAY_FIELD_SIZE):
+            for q in range(0,ARRAY_FIELD_SIZE):
+                allPositionsFromGhostsUp[p][q][j][i] = PercentagesOfGames[i][p][q][j][2]
+                allPositionsFromGhostsDown[p][q][j][i] = PercentagesOfGames[i][p][q][j][3]
+                allPositionsFromGhostsLeft[p][q][j][i] = PercentagesOfGames[i][p][q][j][0]
+                allPositionsFromGhostsRight[p][q][j][i] = PercentagesOfGames[i][p][q][j][1]
+                
 
-print("recorded")
-for i in range (0, NUMBER_OF_GAMES):
+'''print("recorded")
+for i in range (0, NUMBER_OF_GAMES - TRAINING_SESSIONS):
     for j in range (0, NUMBER_OF_GHOSTS):
-        print (i, j, allPositionsFromGhostsUp[j][i])
-        print (i, j, allPositionsFromGhostsDown[j][i])
-        print (i, j, allPositionsFromGhostsLeft[j][i])
-        print (i, j, allPositionsFromGhostsRight[j][i])
-
+        for p in range(0, ARRAY_FIELD_SIZE):
+            for q in range(0,ARRAY_FIELD_SIZE):
+                #if allPositionsFromGhostsUp[p][q][j][i] > 0 :
+                print (i, j, allPositionsFromGhostsUp[p][q][j][i])
+                print (i, j, allPositionsFromGhostsDown[p][q][j][i])
+                print (i, j, allPositionsFromGhostsLeft[p][q][j][i])
+                print (i, j, allPositionsFromGhostsRight[p][q][j][i])
+'''
 
 total = 0.0;
-averagesGhostsUp = np.zeros(4, dtype=float)
-averagesGhostsDown = np.zeros(4, dtype=float)
-averagesGhostsLeft = np.zeros(4, dtype=float)
-averagesGhostsRight = np.zeros(4, dtype=float)
+averagesGhostsUp = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dtype=float)
+averagesGhostsDown = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dtype=float)
+averagesGhostsLeft = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dtype=float)
+averagesGhostsRight = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dtype=float)
 for j in range (0, NUMBER_OF_GHOSTS):
-    print (j, 'up', np.sum(allPositionsFromGhostsUp[j]))
-    print (j, 'down', np.sum(allPositionsFromGhostsDown[j]))
-    print (j, 'left',np.sum(allPositionsFromGhostsLeft[j]))
-    print (j, 'right', np.sum(allPositionsFromGhostsRight[j]))
-    total = float(np.sum(allPositionsFromGhostsUp[j]) + np.sum(allPositionsFromGhostsDown[j])+np.sum(allPositionsFromGhostsLeft[j])+np.sum(allPositionsFromGhostsRight[j]))
-    averagesGhostsUp[j] = np.sum(allPositionsFromGhostsUp[j])/float(total)
-    averagesGhostsDown[j] = np.sum(allPositionsFromGhostsDown[j])/float(total)
-    averagesGhostsLeft[j] = np.sum(allPositionsFromGhostsLeft[j])/float(total)
-    averagesGhostsRight[j] =  np.sum(allPositionsFromGhostsRight[j])/float(total)
-    print('total', total)
+    for p in range(0, ARRAY_FIELD_SIZE):
+            for q in range(0,ARRAY_FIELD_SIZE):
+                print (j, 'up', np.sum(allPositionsFromGhostsUp[p][q][j]))
+                print (j, 'down', np.sum(allPositionsFromGhostsDown[p][q][j]))
+                print (j, 'left',np.sum(allPositionsFromGhostsLeft[p][q][j]))
+                print (j, 'right', np.sum(allPositionsFromGhostsRight[p][q][j]))
+                total = float(np.sum(allPositionsFromGhostsUp[p][q][j]) + np.sum(allPositionsFromGhostsDown[p][q][j])+np.sum(allPositionsFromGhostsLeft[p][q][j])+np.sum(allPositionsFromGhostsRight[p][q][j]))
+                if(np.sum(allPositionsFromGhostsUp[p][q][j]) > 0):
+                    averagesGhostsUp[p][q][j] = np.sum(allPositionsFromGhostsUp[p][q][j])/float(total)
+                if(np.sum(allPositionsFromGhostsDown[p][q][j]) > 0):
+                    averagesGhostsDown[p][q][j] = np.sum(allPositionsFromGhostsDown[p][q][j])/float(total)
+                if(np.sum(allPositionsFromGhostsLeft[p][q][j]) > 0):
+                    averagesGhostsLeft[p][q][j] = np.sum(allPositionsFromGhostsLeft[p][q][j])/float(total)
+                if(np.sum(allPositionsFromGhostsRight[p][q][j]) > 0):
+                    averagesGhostsRight[p][q][j] =  np.sum(allPositionsFromGhostsRight[p][q][j])/float(total)
+                print('total', total)
 
 print("finishedrecorded")
 
 for j in range (0, NUMBER_OF_GHOSTS):
-    print (j, averagesGhostsUp[j])
-    print (j, averagesGhostsDown[j])
-    print (j, averagesGhostsLeft[j])
-    print (j, averagesGhostsRight[j])
+    for p in range(0, ARRAY_FIELD_SIZE):
+            for q in range(0,ARRAY_FIELD_SIZE):
+                print ('up', 'ghost', j, p, q, averagesGhostsUp[p][q][j])
+                print ('down', 'ghost',j, p, q, averagesGhostsDown[p][q][j])
+                print ('left', 'ghost',j, p, q, averagesGhostsLeft[p][q][j])
+                print ('right', 'ghost',j, p, q, averagesGhostsRight[p][q][j])
 
-for j in range (0, NUMBER_OF_GHOSTS):
-	print("Ghost[%d] up: %f | down: %f | left: %f | right: %f" %(j, averagesGhostsUp[j], averagesGhostsDown[j],averagesGhostsLeft[j],averagesGhostsRight[j]))
+#for j in range (0, NUMBER_OF_GHOSTS):
+#	print("Ghost[%d] up: %f | down: %f | left: %f | right: %f" %(j, averagesGhostsUp[j], averagesGhostsDown[j],averagesGhostsLeft[j],averagesGhostsRight[j]))
+
+#----------------------------------ENDS HERE
+
+
+
+
+
 
 #print("shape of allPositionsFromGhostOneUp", allPositionsFromGhostOneUp.shape)
 
