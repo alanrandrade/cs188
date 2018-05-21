@@ -10,35 +10,19 @@ import numpy as np
 NUMBER_OF_GHOSTS = 4;
 NUMBER_OF_GAMES = 201;
 TRAINING_SESSIONS = 99;
-FIELD_OF_VIEW = 10;
+FIELD_OF_VIEW = 9;
+ARRAY_FIELD_SIZE = FIELD_OF_VIEW*2 +1
 POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD = 4;
 
 filename = "ghost_movements.csv"
 file = open(filename, "r")
 previous = ""
 
-# leftG0 = 0
-# rightG0 = 0
-# upG0 = 0
-# downG0 = 0
-# leftG1 = 0
-# rightG1 = 0
-# upG1 = 0
-# downG1 = 0
-# leftG2 = 0
-# rightG2 = 0
-# upG2 = 0
-# downG2 = 0
-# leftG3 = 0
-# rightG3 = 0
-# upG3 = 0
-# downG3 = 0
-
 ArrayWithGhostCounters = np.zeros(shape = (NUMBER_OF_GHOSTS,4))
 
-NEWArrayWithGhostCounters = np.zeros(shape=(FIELD_OF_VIEW*2,FIELD_OF_VIEW*2, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
+NEWArrayWithGhostCounters = np.zeros(shape=(ARRAY_FIELD_SIZE,ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
 
-PercentagesOfGames = np.zeros(shape=(NUMBER_OF_GAMES - TRAINING_SESSIONS, FIELD_OF_VIEW*2,FIELD_OF_VIEW*2, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
+PercentagesOfGames = np.zeros(shape=(NUMBER_OF_GAMES - TRAINING_SESSIONS, ARRAY_FIELD_SIZE,ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
 
 counter = 0
 training_counter = 0;
