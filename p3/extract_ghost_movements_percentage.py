@@ -86,6 +86,11 @@ for line in file:
                 for i in range(0, len(m)-1):
                         result = ((m[i] -r[i] >= -1) and (m[i] -r[i]<= 1) ) and result
                         
+                for i in range(1, len(m)-1):
+                        xdistance = r[0] - r[i*2] + FIELD_OF_VIEW;
+                        ydistance = r[1] - r[1 + i*2] + FIELD_OF_VIEW;
+                        result = ((xdistance >= 0 and xdistance <= FIELD_OF_VIEW) and (ydistance >= 0 and ydistance <= FIELD_OF_VIEW)) and result
+                
                 if(result):
                     for i in range (1, NUMBER_OF_GHOSTS+1):
                         
