@@ -1,5 +1,7 @@
+from __future__ import print_function
 import re
 import numpy as np
+
 
 
 # file =  "PacmanPos, 9, 1, Ghost0Pos, 8, 7, Ghost1Pos, 9, 7, Ghost2Pos, 10, 7, Ghost3Pos, 11, 7, "
@@ -9,7 +11,7 @@ import numpy as np
 
 NUMBER_OF_GHOSTS = 2;
 NUMBER_OF_GAMES = 500;
-TRAINING_SESSIONS = 0;
+TRAINING_SESSIONS = 480;
 FIELD_OF_VIEW = 17;
 
 ARRAY_FIELD_SIZE = FIELD_OF_VIEW*2 +1
@@ -148,10 +150,10 @@ for i in range (0, NUMBER_OF_GAMES - TRAINING_SESSIONS):
 '''
 
 total = 0.0;
-averagesGhostsUp = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dtype=float)
-averagesGhostsDown = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dtype=float)
-averagesGhostsLeft = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dtype=float)
-averagesGhostsRight = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dtype=float)
+averagesGhostsUp = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
+averagesGhostsDown = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
+averagesGhostsLeft = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
+averagesGhostsRight = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
 for j in range (0, NUMBER_OF_GHOSTS):
     for p in range(0, ARRAY_FIELD_SIZE):
             for q in range(0,ARRAY_FIELD_SIZE):
@@ -171,7 +173,7 @@ for j in range (0, NUMBER_OF_GHOSTS):
                 # print('total', total)
 
 # print("finishedrecorded")
-
+'''
 for j in range (0, NUMBER_OF_GHOSTS):
     for p in range(0, ARRAY_FIELD_SIZE):
             for q in range(0,ARRAY_FIELD_SIZE):
@@ -179,9 +181,39 @@ for j in range (0, NUMBER_OF_GHOSTS):
                 print ('down', 'ghost',j, p- FIELD_OF_VIEW, q- FIELD_OF_VIEW, averagesGhostsDown[p][q][j])
                 print ('left', 'ghost',j, p- FIELD_OF_VIEW, q- FIELD_OF_VIEW, averagesGhostsLeft[p][q][j])
                 print ('right', 'ghost',j, p- FIELD_OF_VIEW, q- FIELD_OF_VIEW, averagesGhostsRight[p][q][j])
+'''
 
+def getId(currentValueX, currentValueY):
+    result = ''
+    if(currentValueX < 10):
+        result = '0'+ str(currentValueX)
+    else:
+        result = str(currentValueX)
+    if(currentValueY < 10):
+        result = result + '0' + str(currentValueY)
+    else:
+        result = result + str(currentValueY)
+    return result
 
+print('mdp')
+print('')
+print('module pacman')
+print('')
+print('\ts : [0..', end='')
+for j in range (0, NUMBER_OF_GHOSTS*2): # maximum state is the maximum coordinates for x and y for each ghost
+    print(ARRAY_FIELD_SIZE, end='')
 
+print('];')    
+print('')
+
+for ghost1X in range(0, ARRAY_FIELD_SIZE):
+    for ghost1Y in range(0, ARRAY_FIELD_SIZE):
+        for ghost2X in range(0, ARRAY_FIELD_SIZE):
+            for ghost2Y in range(0, ARRAY_FIELD_SIZE):
+                print('[] s=', end='')
+                print(getId(ghost1X, ghost1Y))
+
+print('endmodule')
 			
 
 
