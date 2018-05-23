@@ -7,10 +7,11 @@ import numpy as np
 # m = re.findall(r'\d', file)
 # print(m[0])
 
-NUMBER_OF_GHOSTS = 4;
-NUMBER_OF_GAMES = 150;
-TRAINING_SESSIONS = 50;
-FIELD_OF_VIEW = 9;
+NUMBER_OF_GHOSTS = 2;
+NUMBER_OF_GAMES = 500;
+TRAINING_SESSIONS = 0;
+FIELD_OF_VIEW = 17;
+
 ARRAY_FIELD_SIZE = FIELD_OF_VIEW*2 +1
 POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD = 4;
 
@@ -123,7 +124,7 @@ allPositionsFromGhostsUp = np.zeros(shape=(ARRAY_FIELD_SIZE,ARRAY_FIELD_SIZE,4,N
 allPositionsFromGhostsDown = np.zeros(shape=(ARRAY_FIELD_SIZE,ARRAY_FIELD_SIZE, 4,NUMBER_OF_GAMES - TRAINING_SESSIONS))
 allPositionsFromGhostsLeft = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4,NUMBER_OF_GAMES - TRAINING_SESSIONS))
 allPositionsFromGhostsRight = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4,NUMBER_OF_GAMES - TRAINING_SESSIONS))
-print('counter', counter)
+#print('counter', counter)
 for i in range (0, NUMBER_OF_GAMES - TRAINING_SESSIONS):
     for j in range (0, NUMBER_OF_GHOSTS):
         for p in range(0, ARRAY_FIELD_SIZE):
@@ -154,10 +155,10 @@ averagesGhostsRight = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE,4), dty
 for j in range (0, NUMBER_OF_GHOSTS):
     for p in range(0, ARRAY_FIELD_SIZE):
             for q in range(0,ARRAY_FIELD_SIZE):
-                print (j, 'up', np.sum(allPositionsFromGhostsUp[p][q][j]))
-                print (j, 'down', np.sum(allPositionsFromGhostsDown[p][q][j]))
-                print (j, 'left',np.sum(allPositionsFromGhostsLeft[p][q][j]))
-                print (j, 'right', np.sum(allPositionsFromGhostsRight[p][q][j]))
+                # print (j, 'up', np.sum(allPositionsFromGhostsUp[p][q][j]))
+                # print (j, 'down', np.sum(allPositionsFromGhostsDown[p][q][j]))
+                # print (j, 'left',np.sum(allPositionsFromGhostsLeft[p][q][j]))
+                # print (j, 'right', np.sum(allPositionsFromGhostsRight[p][q][j]))
                 total = float(np.sum(allPositionsFromGhostsUp[p][q][j]) + np.sum(allPositionsFromGhostsDown[p][q][j])+np.sum(allPositionsFromGhostsLeft[p][q][j])+np.sum(allPositionsFromGhostsRight[p][q][j]))
                 if(np.sum(allPositionsFromGhostsUp[p][q][j]) > 0):
                     averagesGhostsUp[p][q][j] = np.sum(allPositionsFromGhostsUp[p][q][j])/float(total)
@@ -167,89 +168,17 @@ for j in range (0, NUMBER_OF_GHOSTS):
                     averagesGhostsLeft[p][q][j] = np.sum(allPositionsFromGhostsLeft[p][q][j])/float(total)
                 if(np.sum(allPositionsFromGhostsRight[p][q][j]) > 0):
                     averagesGhostsRight[p][q][j] =  np.sum(allPositionsFromGhostsRight[p][q][j])/float(total)
-                print('total', total)
+                # print('total', total)
 
-print("finishedrecorded")
+# print("finishedrecorded")
 
 for j in range (0, NUMBER_OF_GHOSTS):
     for p in range(0, ARRAY_FIELD_SIZE):
             for q in range(0,ARRAY_FIELD_SIZE):
-                print ('up', 'ghost', j, p, q, averagesGhostsUp[p][q][j])
-                print ('down', 'ghost',j, p, q, averagesGhostsDown[p][q][j])
-                print ('left', 'ghost',j, p, q, averagesGhostsLeft[p][q][j])
-                print ('right', 'ghost',j, p, q, averagesGhostsRight[p][q][j])
-
-#for j in range (0, NUMBER_OF_GHOSTS):
-#	print("Ghost[%d] up: %f | down: %f | left: %f | right: %f" %(j, averagesGhostsUp[j], averagesGhostsDown[j],averagesGhostsLeft[j],averagesGhostsRight[j]))
-
-#----------------------------------ENDS HERE
-
-
-
-
-
-
-#print("shape of allPositionsFromGhostOneUp", allPositionsFromGhostOneUp.shape)
-
-
-# for i in range (0, NUMBER_OF_GHOSTS):
-# 	total = float(ArrayWithGhostCounters[i][0] + ArrayWithGhostCounters[i][1] + ArrayWithGhostCounters[i][2] + ArrayWithGhostCounters[i][3])
-# 	print("Ghost %d up %f down: %f left: %f right: %f\n" %(i,(ArrayWithGhostCounters[i][2]/total),(ArrayWithGhostCounters[i][3]/total),(ArrayWithGhostCounters[i][0]/total), (ArrayWithGhostCounters[i][1]/total) ))
-# 	print("Ghost %d up %d down: %d left: %d right: %d\n" %(i,(ArrayWithGhostCounters[i][2]),(ArrayWithGhostCounters[i][3]),(ArrayWithGhostCounters[i][0]), (ArrayWithGhostCounters[i][1]) ))
-
-
-
-# print('here')
-# print(upPercentage[0], upPercentage[1], upPercentage[2], upPercentage[3])
-
-# #PercentagesOfGames[N_GAME][GHOST][PERCENTAGES]
-
-# for j in range (0, NUMBER_OF_GHOSTS):
-# 	for i in range (0, NUMBER_OF_GAMES):
-# 		#print('this',j, i, upPercentage[j], PercentagesOfGames[i][j][2])
-# 		upPercentage[j][i] =  float(PercentagesOfGames[i][j][2])
-# 		downPercentage[j][i] = float(PercentagesOfGames[i][j][3])
-# 		leftPercentage[j][i] =  float(PercentagesOfGames[i][j][0])
-# 		rightPercentage[j][i] = float(PercentagesOfGames[i][j][1])
-		# print("\n")
-		# print(i, j, PercentagesOfGames[i][j][2] ,upPercentage[j][i])
-		# print('\n')
-		# print(PercentagesOfGames[i][j][3],downPercentage[j][i])
-		# print('\n')
-		# print(PercentagesOfGames[i][j][0], leftPercentage[j][i])
-		# print('\n')
-		# print(PercentagesOfGames[i][j][1], rightPercentage[j][i])
-		# print('here')
-		#print(upPercentage[0], upPercentage[1], upPercentage[2], upPercentage[3])
-		#print("%d up %f down %f left %f right %f" % (j, upPercentage[j], downPercentage[j], leftPercentage[j], rightPercentage[j]))
-		#print(np.sum(PercentagesOfGames[i][j][k], axis = 0))
-	#print("%d up %f down %f left %f right %f" % (j, upPercentage[j], downPercentage[j], leftPercentage[j], rightPercentage[j]))
-
-
-# print('shape of upPercentage ', upPercentage.shape)
-
-# for i in range (0, NUMBER_OF_GAMES):
-# 	for J in range (0, NUMBER_OF_GHOSTS):
-# 		print('upPercentage[%d]: %f' % (i, (PercentagesOfGames[i][j][2])))
-# 		print('downPercentage[%d]: %f' %(i, (PercentagesOfGames[i][j][3])))
-# 		print('leftPercentage[%d]: %f' %(i, (PercentagesOfGames[i][j][0])))
-# 		print('rightPercentage[%d]: %f' %(i, (PercentagesOfGames[i][j][1])))
-
-
-
-# average = np.zeros(shape = (4,4) )
-# for i in range (0, NUMBER_OF_GHOSTS):
-# 	mysum = np.sum(upPercentage[i]) + np.sum(downPercentage[i]) + np.sum(leftPercentage[i]) + np.sum(rightPercentage[i]);
-
-# 	average[i][0] = np.sum(upPercentage[i])/ float(mysum)
-# 	average[i][1] = np.sum(downPercentage[i])/float(mysum)
-# 	average[i][2] = np.sum(downPercentage[i])/float(mysum)
-# 	average[i][3] = np.sum(downPercentage[i])/float(mysum)
-
-
-# for i in range (0, NUMBER_OF_GHOSTS):
-# 	print("Ghost %d up %f down: %f left: %f right: %f\n" %(i,average[i][0],average[i][1],average[i][2], average[i][3] ))
-
+                print ('up', 'ghost', j, p - FIELD_OF_VIEW, q- FIELD_OF_VIEW, averagesGhostsUp[p][q][j])
+                print ('down', 'ghost',j, p- FIELD_OF_VIEW, q- FIELD_OF_VIEW, averagesGhostsDown[p][q][j])
+                print ('left', 'ghost',j, p- FIELD_OF_VIEW, q- FIELD_OF_VIEW, averagesGhostsLeft[p][q][j])
+                print ('right', 'ghost',j, p- FIELD_OF_VIEW, q- FIELD_OF_VIEW, averagesGhostsRight[p][q][j])
 
 
 
