@@ -150,10 +150,7 @@ for i in range (0, NUMBER_OF_GAMES - TRAINING_SESSIONS):
 '''
 
 total = 0.0;
-averagesGhostsUp = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
-averagesGhostsDown = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
-averagesGhostsLeft = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
-averagesGhostsRight = np.zeros(shape=(ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
+averagesGhosts = np.zeros(shape=(POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD, ARRAY_FIELD_SIZE, ARRAY_FIELD_SIZE, NUMBER_OF_GHOSTS), dtype=float)
 for j in range (0, NUMBER_OF_GHOSTS):
     for p in range(0, ARRAY_FIELD_SIZE):
             for q in range(0,ARRAY_FIELD_SIZE):
@@ -163,13 +160,13 @@ for j in range (0, NUMBER_OF_GHOSTS):
                 # print (j, 'right', np.sum(allPositionsFromGhostsRight[p][q][j]))
                 total = float(np.sum(allPositionsFromGhostsUp[p][q][j]) + np.sum(allPositionsFromGhostsDown[p][q][j])+np.sum(allPositionsFromGhostsLeft[p][q][j])+np.sum(allPositionsFromGhostsRight[p][q][j]))
                 if(np.sum(allPositionsFromGhostsUp[p][q][j]) > 0):
-                    averagesGhostsUp[p][q][j] = np.sum(allPositionsFromGhostsUp[p][q][j])/float(total)
+                    averagesGhosts[0][p][q][j] = np.sum(allPositionsFromGhostsUp[p][q][j])/float(total)
                 if(np.sum(allPositionsFromGhostsDown[p][q][j]) > 0):
-                    averagesGhostsDown[p][q][j] = np.sum(allPositionsFromGhostsDown[p][q][j])/float(total)
+                    averagesGhosts[1][p][q][j] = np.sum(allPositionsFromGhostsDown[p][q][j])/float(total)
                 if(np.sum(allPositionsFromGhostsLeft[p][q][j]) > 0):
-                    averagesGhostsLeft[p][q][j] = np.sum(allPositionsFromGhostsLeft[p][q][j])/float(total)
+                    averagesGhosts[2][p][q][j] = np.sum(allPositionsFromGhostsLeft[p][q][j])/float(total)
                 if(np.sum(allPositionsFromGhostsRight[p][q][j]) > 0):
-                    averagesGhostsRight[p][q][j] =  np.sum(allPositionsFromGhostsRight[p][q][j])/float(total)
+                    averagesGhosts[3][p][q][j] =  np.sum(allPositionsFromGhostsRight[p][q][j])/float(total)
                 # print('total', total)
 
 # print("finishedrecorded")
@@ -183,7 +180,7 @@ for j in range (0, NUMBER_OF_GHOSTS):
                 print ('right', 'ghost',j, p- FIELD_OF_VIEW, q- FIELD_OF_VIEW, averagesGhostsRight[p][q][j])
 '''
 
-def getId(currentValueX, currentValueY):
+def getIdPartly(currentValueX, currentValueY):
     result = ''
     if(currentValueX < 10):
         result = '0'+ str(currentValueX)
@@ -195,13 +192,65 @@ def getId(currentValueX, currentValueY):
         result = result + str(currentValueY)
     return result
 
+def getId(ghost1x, ghost1y, ghost2x, ghost2y):
+    full_string = getIdPartly(ghost1x, ghost1y) + getIdPartly(ghost2x, ghost2y)
+    busy = True
+    while (busy):
+        if (len(full_string) > 1):
+            if (full_string[0] == '0'):
+                full_string = full_string[1:]
+            else:
+                busy = False
+        else: 
+            busy = False
+    return full_string
+
+def getGhostMovement(pacmanAction, ghostAction, ghostx, ghosty):
+    if (pacmanAction == 0):                 # UP
+        if(ghostAction == 0): #up
+            return ghostx, ghosty
+        if(ghostAction == 1): #down
+            return ghostx, (ghosty-2)
+        if(ghostAction == 2): #left
+            return (ghostx -1), (ghosty-1)
+        if(ghostAction == 3): #right
+            return (ghostx + 1), (ghosty-1)
+    elif (pacmanAction == 1):               #DOWN
+        if(ghostAction == 0): #up
+            return ghostx, (ghosty + 2)
+        if(ghostAction == 1): #down
+            return ghostx, ghosty
+        if(ghostAction == 2): #left
+            return (ghostx -1), (ghosty + 1)
+        if(ghostAction == 3): #right
+            return (ghostx + 1), (ghosty + 1)
+    elif (pacmanAction == 2):               #LEFT
+        if(ghostAction == 0): #up
+            return (ghostx + 1), (ghosty + 1)
+        if(ghostAction == 1): #down
+            return (ghostx + 1), (ghosty - 1)
+        if(ghostAction == 2): #left
+            return ghostx, ghosty
+        if(ghostAction == 3): #right
+            return (ghostx + 2), ghosty
+    elif (pacmanAction == 3):               #RIGHT
+        if(ghostAction == 0): #up
+            return (ghostx - 1), (ghosty + 1)
+        if(ghostAction == 1): #down
+            return (ghostx - 1), (ghosty - 1)
+        if(ghostAction == 2): #left
+            return (ghostx - 2), ghosty
+        if(ghostAction == 3): #right
+            return ghostx, ghosty
+        
+        
 print('mdp')
 print('')
 print('module pacman')
 print('')
 print('\ts : [0..', end='')
 for j in range (0, NUMBER_OF_GHOSTS*2): # maximum state is the maximum coordinates for x and y for each ghost
-    print(ARRAY_FIELD_SIZE, end='')
+    print(ARRAY_FIELD_SIZE-1, end='')
 
 print('];')    
 print('')
@@ -210,10 +259,28 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE):
     for ghost1Y in range(0, ARRAY_FIELD_SIZE):
         for ghost2X in range(0, ARRAY_FIELD_SIZE):
             for ghost2Y in range(0, ARRAY_FIELD_SIZE):
-                print('[] s=', end='')
-                print(getId(ghost1X, ghost1Y))
+                for action in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
+                    first_part = '[' + str(action) + '] s='
+                    first_part += getId(ghost1X, ghost1Y, ghost2X, ghost2Y)
+                    first_part += " -> "
+                    line = "";
+                    for g1 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
+                        for g2 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
+                            prob = str(averagesGhosts[g1][ghost1X][ghost1Y][0] * averagesGhosts[g2][ghost1X][ghost1Y][1])
+                            if (prob != "0.0"):
+                                line += prob + " (s'="
+                                g1resultX, g1resultY  = getGhostMovement(action, g1, ghost1X, ghost1Y)
+                                g2resultX, g2resultY = getGhostMovement(action, g2, ghost2X, ghost2Y)
+                                line += getId(g1resultX, g1resultY, g2resultX, g2resultY)
+                                line += ")"
+                                line += " + "
+                    if (len(line) > 0):
+                        print(first_part, end='')
+                        print(line[:-3], end='')
+                        print(";")
 
-print('endmodule')
+print("")
+print("endmodule")
 			
 
 
