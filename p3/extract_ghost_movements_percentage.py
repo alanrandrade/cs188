@@ -316,10 +316,17 @@ print('\tyG0 : [0..ySize] init 1; // y position of Ghost')
 print('\txG1 : [0..xSize] init 11; // x position of Ghost')
 print('\tyG1 : [0..ySize] init 1; // y position of Ghost')
 print('\txP : [0..xSize] init 9; // x position of Pacman')
-print('\typ : [0..ySize] init 5; // y position of Pacman')
+print('\tyP : [0..ySize] init 5; // y position of Pacman')
 print('')
 
 
+def getSign(i):
+	if(i > 0):
+		return '+ '+ str(i)
+	elif(i < 0):
+		return str(i)
+	else:
+		return ''
 
 for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
     for ghost1Y in range(0, ARRAY_FIELD_SIZE_Y):
@@ -327,7 +334,7 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
             for ghost2Y in range(0, ARRAY_FIELD_SIZE_Y):
                 for action in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
                     first_part = '[' + getAction(action) + '] '
-                    first_part += '(xG0= (xP + '+str(ghost1X-xMap) +') & yG0= (yP + '+str(ghost1Y) +') & xG1= (xP + '+str(ghost2X-xMap) +') & yG1= (yP+ '+str(ghost2Y)+'))'
+                    first_part += '(xG0= (xP ' + str(getSign((ghost1X-xMap))) +') & yG0= (yP '+ str(getSign((ghost1Y-yMap))) +') & xG1= (xP '+str(getSign((ghost2X-xMap))) +') & yG1= (yP '+ str(getSign((ghost2Y-yMap)))+'))'
                     first_part += " -> "
                     line = "";
                     for g1 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
