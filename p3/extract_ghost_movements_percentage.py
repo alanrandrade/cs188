@@ -27,6 +27,7 @@ xMap = pacMap.shape[1]
 ARRAY_FIELD_SIZE_X = ((xMap-2)*2)-1
 ARRAY_FIELD_SIZE_Y = ((yMap-2)*2)-1
 
+
 NUM_GHOSTS = 2
 
 outcomeRules = ''
@@ -39,6 +40,8 @@ POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD = 4;
 filename = "ghost_movements.csv"
 file = open(filename, "r")
 previous = ""
+
+#ArrayWithGhostCounters = np.zeros(shape = (NUMBER_OF_GHOSTS,4))
 
 NEWArrayWithGhostCounters = np.zeros(shape=(ARRAY_FIELD_SIZE_X,ARRAY_FIELD_SIZE_Y, NUMBER_OF_GHOSTS,POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD))
 
@@ -305,7 +308,6 @@ print('mdp')
 print('')
 print('const xSize ='+ str(xMap)+';')
 print('const ySize ='+ str(yMap)+';')
-
 print('')
 print('module pacman')
 print('')
@@ -345,7 +347,7 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
                     if (len(line) > 0):
                         print(first_part, end='')
                         print(line[:-3], end='')
-                    print(";")
+                        print(";")
 
 print("")
 print("endmodule")
@@ -368,4 +370,5 @@ print("endmodule")
 
                 if(pacMap[x][y+1] != '%'):
                     outcomeRules += '[g'+str(g)+ '] (y ='+str(y) + '& x'+ str(x)+') -> 1:(y\' = y+1)' +'\n'
-'''
+
+                    '''
