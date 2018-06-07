@@ -334,7 +334,7 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
             for ghost2Y in range(0, ARRAY_FIELD_SIZE_Y):
                 for action in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
                     first_part = '[' + getAction(action) + '] '
-                    first_part += '(xG0= (xP ' + str(getSign((ghost1X-xMap))) +') & yG0= (yP '+ str(getSign((ghost1Y-yMap))) +') & xG1= (xP '+str(getSign((ghost2X-xMap))) +') & yG1= (yP '+ str(getSign((ghost2Y-yMap)))+'))'
+                    first_part += '(xG0= (xP ' + str(getSign((ghost1X-xMap))) +') & yG0= (yP '+ str(getSign((ghost1Y-yMap))) +') & xG1= (xP '+str(getSign((ghost2X-xMap))) +') & yG1= (yP '+ str(getSign((ghost2Y-yMap)))+') & yP > 0 & xP > 0)'
                     first_part += " -> "
                     line = "";
                     for g1 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
