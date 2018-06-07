@@ -300,11 +300,14 @@ def getAction(act):
         return 'left'
     elif(act == 3):
         return 'right'
-        
+
+      
+ 
 print('mdp')
 print('')
 print('const xSize ='+ str(xMap)+';')
 print('const ySize ='+ str(yMap)+';')
+
 print('')
 print('module pacman')
 print('')
