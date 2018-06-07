@@ -303,18 +303,23 @@ def getAction(act):
         return 'left'
     elif(act == 3):
         return 'right'
-        
+
+      
+ 
 print('mdp')
 print('')
 print('const xSize ='+ str(xMap)+';')
 print('const ySize ='+ str(yMap)+';')
+print('const xSize ='+ str(xMap)+';')
+print('const ySize ='+ str(yMap)+';')
+
 print('')
 print('module pacman')
 print('')
-print('\txG0 : [0..xSize] init 8; // x position of Ghost')
-print('\tyG0 : [0..ySize] init 1; // y position of Ghost')
-print('\txG1 : [0..xSize] init 11; // x position of Ghost')
-print('\tyG1 : [0..ySize] init 1; // y position of Ghost')
+print('\txG0 : [-16..16] init 8; // x position of Ghost')
+print('\tyG0 : [-6..6] init 1; // y position of Ghost')
+print('\txG1 : [-16..16] init 11; // x position of Ghost')
+print('\tyG1 : [-6..6] init 1; // y position of Ghost')
 print('\txP : [0..xSize] init 9; // x position of Pacman')
 print('\tyP : [0..ySize] init 5; // y position of Pacman')
 print('')
