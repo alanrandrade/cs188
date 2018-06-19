@@ -38,7 +38,7 @@ NUMBER_OF_GAMES = 2010;
 TRAINING_SESSIONS = 2000;
 POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD = 4;
 
-filename = "ghost_movements.csv"
+filename = "ghost_movements_micro.csv"
 file = open(filename, "r")
 previous = ""
 
