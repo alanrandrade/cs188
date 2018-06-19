@@ -275,9 +275,9 @@ def getSign(i):
 def rond(i):
     modded = i % 1;
     if(modded > 0.0 and modded < 0.00005):
-        return math.floor((i);
+        return floor(i);
     elif((modded > 0.99995) and (modded < 1.0 )):
-        return math.ceil(i);
+        return ceil(i);
 
 for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
     for ghost1Y in range(0, ARRAY_FIELD_SIZE_Y):
@@ -292,7 +292,7 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
                         for g2 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
                             prob = str(averagesGhosts[g1][ghost1X][ghost1Y][0] * averagesGhosts[g2][ghost2X][ghost2Y][1])
                             if (prob != "0.0"):
-                                prob = round(prob);
+                                prob = str(round(float(prob)));
                                 line += str(prob) +': ' +str(getGhostMovement(action, g1, 0, ghost1X, ghost1Y))+ str(getGhostMovement(action, g2, 1, ghost2X, ghost2Y))
                                 line += " + "
                     if (len(line) > 0):
