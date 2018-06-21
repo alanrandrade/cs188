@@ -177,13 +177,13 @@ def getGhostMovement(pacmanAction, ghostAction, ghostNumber, ghostx, ghosty):
             #return ghostx, ghosty
 
         if(ghostAction == 1): #down
-            result += '(yG'+ str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-2) &'   
+            result += '(yG'+ str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-2) & '   
             #return ghostx, (ghosty-2)
         elif(ghostAction == 2): #left
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) &'
+            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '
             #return (ghostx -1), (ghosty-1)
         elif(ghostAction == 3): #right
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) &'
+            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '
             #return (ghostx + 1), (ghosty-1)
         if(ghostNumber == 1):
             result += '(xP\' = xP) & (yP\' = yP - 1)'
@@ -196,20 +196,20 @@ def getGhostMovement(pacmanAction, ghostAction, ghostNumber, ghostx, ghosty):
         #elif(ghostAction == 1): #down
             #return ghostx, ghosty
         elif(ghostAction == 2): #left
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) &'
+            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '
             #return (ghostx -1), (ghosty + 1)
         elif(ghostAction == 3): #right
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) &'
+            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '
             #return (ghostx + 1), (ghosty + 1)
         if(ghostNumber == 1):
             result += '(yP\' = yP + 1)'
         return result
     elif (pacmanAction == 2):               #LEFT
         if(ghostAction == 0): #up
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) &'
+            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '
             #return (ghostx + 1), (ghosty + 1)
         elif(ghostAction == 1): #down
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) &'
+            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '
             #return (ghostx + 1), (ghosty - 1)
         #Nothing changes here
         #elif(ghostAction == 2): #left
@@ -222,10 +222,10 @@ def getGhostMovement(pacmanAction, ghostAction, ghostNumber, ghostx, ghosty):
         return result
     elif (pacmanAction == 3):               #RIGHT
         if(ghostAction == 0): #up
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) &'
+            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '
             #return (ghostx - 1), (ghosty + 1)
         elif(ghostAction == 1): #down
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) &'
+            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '
             #return (ghostx - 1), (ghosty - 1)
         elif(ghostAction == 2): #left
             result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-2) & '
@@ -263,21 +263,20 @@ print('\txP : [0..xSize] init 9; // x position of Pacman')
 print('\tyP : [0..ySize] init 5; // y position of Pacman')
 print('')
 
-
 def getSign(i):
 	if(i > 0):
-		return '+ '+ str(i)
+		return ' + '+ str(i)
 	elif(i < 0):
-		return str(i)
+		return ' ' + str(i)
 	else:
 		return ''
     
 def rond(i):
-    modded = i % 1;
-    if(modded > 0.0 and modded < 0.00005):
-        return floor(i);
-    elif((modded > 0.99995) and (modded < 1.0 )):
-        return ceil(i);
+    modded = (1000000 * i) % 1;
+    if(modded < 0.5):
+        return math.floor(i * 1000000) / 1000000;
+    elif(modded >= 0.5):
+        return math.ceil(i * 1000000) / 1000000;
 
 for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
     for ghost1Y in range(0, ARRAY_FIELD_SIZE_Y):
@@ -285,18 +284,41 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
             for ghost2Y in range(0, ARRAY_FIELD_SIZE_Y):
                 for action in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
                     first_part = '[' + getAction(action) + '] '
-                    first_part += '(xG0= (xP ' + str(getSign((ghost1X-xMap))) +') & yG0= (yP '+ str(getSign((ghost1Y-yMap))) +') & xG1= (xP '+str(getSign((ghost2X-xMap))) +') & yG1= (yP '+ str(getSign((ghost2Y-yMap)))+'))'
-                    first_part += " -> "
+                    first_part += '(xG0= (xP' + str(getSign((ghost1X-xMap))) +') & yG0= (yP'+ str(getSign((ghost1Y-yMap))) +') & xG1= (xP'+str(getSign((ghost2X-xMap))) +') & yG1= (yP'+ str(getSign((ghost2Y-yMap)))+')'
+                    first_part += ' & (xP > 1) & (xP < ' + str(xMap) + ') & (yP > 1) & (yP < ' + str(yMap) + ')'
+                    first_part += ' & (xG0 > 1) & (xG0 < ' + str(xMap) + ') & (yG0 > 1) & (yG0 < ' + str(yMap) + ')'
+                    first_part += ' & (xG1 > 1) & (xG1 < ' + str(xMap) + ') & (yG1 > 1) & (yG1 < ' + str(yMap) + ')'
+                    first_part_end = ") -> "
                     line = "";
                     for g1 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
                         for g2 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
-                            prob = str(averagesGhosts[g1][ghost1X][ghost1Y][0] * averagesGhosts[g2][ghost2X][ghost2Y][1])
+                            prob = str(rond(float(averagesGhosts[g1][ghost1X][ghost1Y][0] * averagesGhosts[g2][ghost2X][ghost2Y][1])))
                             if (prob != "0.0"):
-                                prob = str(round(float(prob)));
-                                line += str(prob) +': ' +str(getGhostMovement(action, g1, 0, ghost1X, ghost1Y))+ str(getGhostMovement(action, g2, 1, ghost2X, ghost2Y))
+                                line += prob +': ' + str(getGhostMovement(action, g1, 0, ghost1X, ghost1Y))+ str(getGhostMovement(action, g2, 1, ghost2X, ghost2Y))
                                 line += " + "
+                                if (action == 0):
+                                    if (g1 == 1):
+                                        first_part += " & (yG0 > 2)"
+                                    if (g2 == 1):
+                                        first_part += " & (yG1 > 2)"
+                                elif (action == 1):
+                                    if (g1 == 0):
+                                        first_part += " & (yG0 < " + str(yMap - 2) + ")"
+                                    if (g2 == 0):
+                                        first_part += " & (yG1 < " + str(yMap - 2) + ")"
+                                elif (action == 2):
+                                    if (g1 == 3):
+                                        first_part += " & (xG0 < " + str(xMap - 2) + ")"
+                                    if (g2 == 3):
+                                        first_part += " & (xG1 < " + str(xMap - 2) + ")"
+                                elif (action == 3):
+                                    if (g1 == 2):
+                                        first_part += " & (xG0 > 2)"
+                                    if (g2 == 3):
+                                        first_part += " & (xG0 > 2)"
                     if (len(line) > 0):
                         print(first_part, end='')
+                        print(first_part_end, end='')
                         print(line[:-3], end='')
                         print(";")
 
