@@ -285,9 +285,17 @@ class ClassicGameRules:
     if state.isWin(): self.win(state, game)
     if state.isLose(): self.lose(state, game)
 
-  def writeEndOfGame(self):
+  def writeEndOfGame(self, state):
     f = open("ghost_movements.csv","a");
     #f.write("PacmanPos, %d, %d, " % (x, y));
+    ghosts = state.getGhostPositions()
+    x, y = state.getPacmanPosition()
+
+    f.write("%d, %d, " % (x, y));
+    for i in range(0, len(ghosts)):
+      px, py = ghosts[i]
+      f.write("%d, %d, " % (px, py) );
+    
     f.write("\n")
     f.write("End of game");
     f.write("\n")
@@ -296,7 +304,7 @@ class ClassicGameRules:
   def win( self, state, game ):
     if not self.quiet: print "Pacman emerges victorious! Score: %d" % state.data.score
     game.gameOver = True
-    self.writeEndOfGame()
+    self.writeEndOfGame(state)
     
 
 
@@ -304,7 +312,7 @@ class ClassicGameRules:
   def lose( self, state, game ):
     if not self.quiet: print "Pacman died! Score: %d" % state.data.score
     game.gameOver = True
-    self.writeEndOfGame()
+    self.writeEndOfGame(state)
 
   def getProgress(self, game):
     return float(game.state.getNumFood()) / self.initialState.getNumFood()
