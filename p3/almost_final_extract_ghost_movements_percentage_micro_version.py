@@ -270,9 +270,9 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
                     first_part = '[' + getAction(action) + '] '
 
                     first_part += '(xG0= (xP' + str(getSign((ghost1X-(ARRAY_FIELD_SIZE_X/2)))) +') & yG0= (yP'+ str(getSign((ghost1Y-(ARRAY_FIELD_SIZE_Y/2)))) +') & xG1= (xP'+str(getSign((ghost2X-(ARRAY_FIELD_SIZE_X/2)))) +') & yG1= (yP'+ str(getSign((ghost2Y-(ARRAY_FIELD_SIZE_Y/2))))+')'
-                    first_part += ' & (xP > 1) & (xP < ' + str(xMap) + ') & (yP > 1) & (yP < ' + str(yMap) + ')'
-                    first_part += ' & (xG0 > 1) & (xG0 < ' + str(xMap) + ') & (yG0 > 1) & (yG0 < ' + str(yMap) + ')'
-                    first_part += ' & (xG1 > 1) & (xG1 < ' + str(xMap) + ') & (yG1 > 1) & (yG1 < ' + str(yMap) + ')'
+                    first_part += ' & (xP > 1) & (xP < ' + str(xMap) + ') & (yP > 0) & (yP < ' + str(yMap) + ')'
+                    first_part += ' & (xG0 > 1) & (xG0 < ' + str(xMap) + ') & (yG0 > 0) & (yG0 < ' + str(yMap) + ')'
+                    first_part += ' & (xG1 > 1) & (xG1 < ' + str(xMap) + ') & (yG1 > 0) & (yG1 < ' + str(yMap) + ')'
                     first_part_end = ") -> "
                     line = "";
                     for g1 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
