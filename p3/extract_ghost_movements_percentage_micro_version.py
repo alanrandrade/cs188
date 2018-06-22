@@ -67,7 +67,6 @@ for line in file:
                         
                             total = NEWArrayWithGhostCounters[p][q][j][0] + NEWArrayWithGhostCounters[p][q][j][1] + NEWArrayWithGhostCounters[p][q][j][2] + NEWArrayWithGhostCounters[p][q][j][3]
 
-  
                             PercentagesOfGames[counter][p][q][j] = NEWArrayWithGhostCounters[p][q][j] 
                             #PercentagesOfGames[counter][j] = ArrayWithGhostCounters[j]
                             for k in range (0, 4):
@@ -79,7 +78,7 @@ for line in file:
                 counter = counter +1
 
         #print ("previous %s \n current %s" % (previous, line))
-        if(training_counter > TRAINING_SESSIONS):
+        if(training_counter >= TRAINING_SESSIONS):
             if((len(r) and len(m) >0 and len(m) == len(r)) and (len(m) >= 0 )):
 
                 result = True;
@@ -89,10 +88,17 @@ for line in file:
                 if(result):
                     for i in range (1, NUMBER_OF_GHOSTS+1):
                         
-                        locX = r[0] - r[i*2] + xMap;
-                        locY = r[1] - r[1 + i*2] + yMap;
+                        locX = ((r[i*2] - r[0]) + (xMap - 3));
+                        locY = ((r[1 + i*2] - r[1]) + (yMap - 3));
+                        #print(locX)
+                        #print(((r[i*2] - r[0]) + (xMap - 3)))
+                        #print(r[i*2])
+                        #print(r[0])
+                        #print(xMap)
+                        #print("Muhahaha")
+                        #print(locY)
+                        #print(((r[1 + i*2] - r[1]) + (yMap - 3)))
                         if(((locX < ARRAY_FIELD_SIZE_X and locX >= 0) and (locY < ARRAY_FIELD_SIZE_Y and locY >= 0))):
-
                             
                             if(m[i*2] != r[i*2]):
                                 if((m[i*2] - r[i*2]) == 1):
@@ -100,10 +106,19 @@ for line in file:
                                     #0 is right
                                     NEWArrayWithGhostCounters[locX][locY][i-1][0] = NEWArrayWithGhostCounters[locX][locY][i-1][0] + 1
                                 elif((m[i*2] - r[i*2]) == -1):
+                                    
                                     #1 is left
-
                                     NEWArrayWithGhostCounters[locX][locY][i-1][1] = NEWArrayWithGhostCounters[locX][locY][i-1][1] + 1
-
+                                    #print("debug_print:")
+                                    #print(i)
+                                    #print(m[i*2])
+                                    #print(r[i*2])
+                                    #print(training_counter)
+                                    #print("locX=", end="")
+                                    #print(locX)
+                                    #print("locY=", end="")
+                                    #print(locY)
+                                    #print("")
                             if(m[i*2 -1] != r[i*2 -1]):
                                 if((m[i*2 -1] - r[i*2 -1]) == 1):
                                     #2 is up
@@ -169,73 +184,28 @@ def getId(ghost1x, ghost1y, ghost2x, ghost2y):
             busy = False
     return full_string
 
-def getGhostMovement(pacmanAction, ghostAction, ghostNumber, ghostx, ghosty):
+def getMovement(pacmanAction, ghostAction, ghostNumber, ghostx, ghosty):
     result = ''
-    if (pacmanAction == 0):                 # UP
-        #if(ghostAction == 0): #up
-            #ghostX and ghostY remains the same
-            #return ghostx, ghosty
+    if(ghostNumber == 0):
+        if (pacmanAction == 0):  # UP
+            result += '(yP\' = yP-1) & '
+        elif (pacmanAction == 1): #DOWN
+            result += '(yP\' = yP+1) & '
+        elif (pacmanAction == 2): #LEFT
+            result += '(xP\' = xP-1) & '
+        elif (pacmanAction == 3): #RIGHT
+            result += '(xP\' = xP+1) & '
+            
+    if(ghostAction == 0): #UP
+        result += '(yG'+ str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '  
+    elif(ghostAction == 1): #down
+        result += '(yG'+ str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '   
+    elif(ghostAction == 2): #left
+        result += '(xG'+ str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & '
+    elif(ghostAction == 3): #right
+        result += '(xG'+ str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & '
 
-        if(ghostAction == 1): #down
-            result += '(yG'+ str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-2) & '   
-            #return ghostx, (ghosty-2)
-        elif(ghostAction == 2): #left
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '
-            #return (ghostx -1), (ghosty-1)
-        elif(ghostAction == 3): #right
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '
-            #return (ghostx + 1), (ghosty-1)
-        if(ghostNumber == 1):
-            result += '(xP\' = xP) & (yP\' = yP - 1)'
-        return result
-    elif (pacmanAction == 1):               #DOWN
-        if(ghostAction == 0): #up
-            result += '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+2) &'
-            #return ghostx, (ghosty + 2)
-        #In this case nothing changes
-        #elif(ghostAction == 1): #down
-            #return ghostx, ghosty
-        elif(ghostAction == 2): #left
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '
-            #return (ghostx -1), (ghosty + 1)
-        elif(ghostAction == 3): #right
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '
-            #return (ghostx + 1), (ghosty + 1)
-        if(ghostNumber == 1):
-            result += '(yP\' = yP + 1)'
-        return result
-    elif (pacmanAction == 2):               #LEFT
-        if(ghostAction == 0): #up
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '
-            #return (ghostx + 1), (ghosty + 1)
-        elif(ghostAction == 1): #down
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '
-            #return (ghostx + 1), (ghosty - 1)
-        #Nothing changes here
-        #elif(ghostAction == 2): #left
-            #return ghostx, ghosty
-        elif(ghostAction == 3): #right
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'+2) & '
-            #return (ghostx + 2), ghosty
-        if(ghostNumber == 1):
-            result += '(xP\' = xP-1)'
-        return result
-    elif (pacmanAction == 3):               #RIGHT
-        if(ghostAction == 0): #up
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'+1) & '
-            #return (ghostx - 1), (ghosty + 1)
-        elif(ghostAction == 1): #down
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-1) & ' + '(yG'+str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '
-            #return (ghostx - 1), (ghosty - 1)
-        elif(ghostAction == 2): #left
-            result += '(xG'+str(ghostNumber)+'\' = xG'+str(ghostNumber)+'-2) & '
-            #return (ghostx - 2), ghosty
-        #Nothing changes here
-        #elif(ghostAction == 3): #right
-        #    return ghostx, ghosty
-        if(ghostNumber == 1):
-            result += '(xP\' = xP+1)'
-        return result
+    return result[:-3]
 
 
 def getAction(act):
@@ -284,7 +254,7 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
             for ghost2Y in range(0, ARRAY_FIELD_SIZE_Y):
                 for action in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
                     first_part = '[' + getAction(action) + '] '
-                    first_part += '(xG0= (xP' + str(getSign((ghost1X-xMap))) +') & yG0= (yP'+ str(getSign((ghost1Y-yMap))) +') & xG1= (xP'+str(getSign((ghost2X-xMap))) +') & yG1= (yP'+ str(getSign((ghost2Y-yMap)))+')'
+                    first_part += '(xG0= (xP' + str(getSign((ghost1X-(xMap-3)))) +') & yG0= (yP'+ str(getSign((ghost1Y-(yMap-3)))) +') & xG1= (xP'+str(getSign((ghost2X-(xMap-3)))) +') & yG1= (yP'+ str(getSign((ghost2Y-(yMap-3))))+')'
                     first_part += ' & (xP > 1) & (xP < ' + str(xMap) + ') & (yP > 1) & (yP < ' + str(yMap) + ')'
                     first_part += ' & (xG0 > 1) & (xG0 < ' + str(xMap) + ') & (yG0 > 1) & (yG0 < ' + str(yMap) + ')'
                     first_part += ' & (xG1 > 1) & (xG1 < ' + str(xMap) + ') & (yG1 > 1) & (yG1 < ' + str(yMap) + ')'
@@ -294,28 +264,8 @@ for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
                         for g2 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
                             prob = str(rond(float(averagesGhosts[g1][ghost1X][ghost1Y][0] * averagesGhosts[g2][ghost2X][ghost2Y][1])))
                             if (prob != "0.0"):
-                                line += prob +': ' + str(getGhostMovement(action, g1, 0, ghost1X, ghost1Y))+ str(getGhostMovement(action, g2, 1, ghost2X, ghost2Y))
+                                line += prob +': ' + str(getMovement(action, g1, 0, ghost1X, ghost1Y))+ ' & ' + str(getMovement(action, g2, 1, ghost2X, ghost2Y))
                                 line += " + "
-                                if (action == 0):
-                                    if (g1 == 1):
-                                        first_part += " & (yG0 > 2)"
-                                    if (g2 == 1):
-                                        first_part += " & (yG1 > 2)"
-                                elif (action == 1):
-                                    if (g1 == 0):
-                                        first_part += " & (yG0 < " + str(yMap - 2) + ")"
-                                    if (g2 == 0):
-                                        first_part += " & (yG1 < " + str(yMap - 2) + ")"
-                                elif (action == 2):
-                                    if (g1 == 3):
-                                        first_part += " & (xG0 < " + str(xMap - 2) + ")"
-                                    if (g2 == 3):
-                                        first_part += " & (xG1 < " + str(xMap - 2) + ")"
-                                elif (action == 3):
-                                    if (g1 == 2):
-                                        first_part += " & (xG0 > 2)"
-                                    if (g2 == 3):
-                                        first_part += " & (xG0 > 2)"
                     if (len(line) > 0):
                         print(first_part, end='')
                         print(first_part_end, end='')
