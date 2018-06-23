@@ -35,8 +35,6 @@ outcomeRules = ''
 NUMBER_OF_GHOSTS = 2;
 NUMBER_OF_GAMES = 2010;
 TRAINING_SESSIONS = 2000;
-#NUMBER_OF_GAMES = 2;
-#TRAINING_SESSIONS = 0;
 POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD = 4;
 
 #filename = "ghost_movements_micro - Copy.csv"
