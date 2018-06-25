@@ -2,6 +2,7 @@ from __future__ import print_function
 import re
 import math
 import numpy as np
+import string
 
 # file =  "PacmanPos, 9, 1, Ghost0Pos, 8, 7, Ghost1Pos, 9, 7, Ghost2Pos, 10, 7, Ghost3Pos, 11, 7, "
 # #m = re.match(r'PacmanPos, (.*), (.*), Ghost0Pos (.*), (.*), Ghost1Pos (.*), (.*), Ghost2Pos (.*), (.*), Ghost3Pos (.*), (.*),', file)
@@ -25,7 +26,7 @@ outcomeRules = ''
 
 NUMBER_OF_GHOSTS = 1;
 NUMBER_OF_GAMES = 2010;
-TRAINING_SESSIONS = 2000;
+TRAINING_SESSIONS = 10;
 POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD = 4;
 
 #filename = "ghost_movements_micro - Copy.csv"
@@ -117,8 +118,8 @@ for i in range (0, NUMBER_OF_GAMES - TRAINING_SESSIONS):
             for q in range(0,ARRAY_FIELD_SIZE_Y):
                 allPositionsFromGhostsUp[p][q][j][i] = PercentagesOfGames[i][p][q][j][2]
                 allPositionsFromGhostsDown[p][q][j][i] = PercentagesOfGames[i][p][q][j][3]
-                allPositionsFromGhostsLeft[p][q][j][i] = PercentagesOfGames[i][p][q][j][0]
-                allPositionsFromGhostsRight[p][q][j][i] = PercentagesOfGames[i][p][q][j][1]
+                allPositionsFromGhostsLeft[p][q][j][i] = PercentagesOfGames[i][p][q][j][1]
+                allPositionsFromGhostsRight[p][q][j][i] = PercentagesOfGames[i][p][q][j][0]
 
 total = 0.0;
 averagesGhosts = np.zeros(shape=(POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD, ARRAY_FIELD_SIZE_X, ARRAY_FIELD_SIZE_Y, NUMBER_OF_GHOSTS), dtype=float)
@@ -161,17 +162,38 @@ def getId(ghost1x, ghost1y, ghost2x, ghost2y):
     return full_string
 
 def getMovement(pacmanAction, ghostAction, ghostNumber, ghostx, ghosty):
+    #print(str(getSign((ghostx-(ARRAY_FIELD_SIZE_X/2)))), str(getSign((ghosty-(ARRAY_FIELD_SIZE_Y/2)))) , ghostAction)
     result = ''
     if(ghostNumber == 0):
         if (pacmanAction == 0):  # UP
-            result += '(yP\' = yP-1) & '
+            if(str(getSign((ghosty-(ARRAY_FIELD_SIZE_Y/2)))) == ' -1' 
+                and str(getSign((ghostx-(ARRAY_FIELD_SIZE_X/2)))) == '' and ghostAction == 1):
+                result += '(yP\' = yP) & '
+            else:
+                result += '(yP\' = yP-1) & '
         elif (pacmanAction == 1): #DOWN
-            result += '(yP\' = yP+1) & '
+            if(str(getSign((ghosty-(ARRAY_FIELD_SIZE_Y/2)))) == ' + 1' 
+                and str(getSign((ghostx-(ARRAY_FIELD_SIZE_X/2)))) == '' 
+                and ghostAction == 0):
+                result += '(yP\' = yP) & '
+            else:
+                result += '(yP\' = yP+1) & '
+
         elif (pacmanAction == 2): #LEFT
-            result += '(xP\' = xP-1) & '
+            if(str(getSign((ghosty-(ARRAY_FIELD_SIZE_Y/2)))) == '' 
+                and str(getSign((ghostx-(ARRAY_FIELD_SIZE_X/2)))) == ' -1' 
+                and ghostAction == 3):
+                result += '(xP\' = xP) & '
+            else:
+                result += '(xP\' = xP-1) & '
         elif (pacmanAction == 3): #RIGHT
-            result += '(xP\' = xP+1) & '
-            
+            if(str(getSign((ghosty-(ARRAY_FIELD_SIZE_Y/2)))) == '' 
+                and str(getSign((ghostx-(ARRAY_FIELD_SIZE_X/2)))) == ' + 1' 
+                and ghostAction == 2):
+                result += '(xP\' = xP) & '
+            else:
+                result += '(xP\' = xP+1) & '
+   
     if(ghostAction == 0): #UP
         result += '(yG'+ str(ghostNumber)+'\' = yG'+str(ghostNumber)+'-1) & '  
     elif(ghostAction == 1): #down
@@ -222,28 +244,41 @@ def rond(i):
     elif(modded >= 0.5):
         return math.ceil(i * 1000000) / 1000000;
 
+
+
 for ghost1X in range(0, ARRAY_FIELD_SIZE_X):
     for ghost1Y in range(0, ARRAY_FIELD_SIZE_Y):
         for action in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
-            
-            if(getAction(action) != 'up' and getAction(action) != 'down'):
-                first_part = '[' + getAction(action) + '] '
+            minX = ''
+            maxX = ''
+            minY = ''
+            maxY = ''
+        
+            first_part = '[' + getAction(action) + '] '
+            if(getAction(action) == 'left'):
+                    minX = 'xP > 1 &'
+            elif(getAction(action) == 'right'):
+                    maxX = 'xP < '+str(xMap-2) + ' & '
+            elif(getAction(action) == 'up'):
+                    minX = 'yP > 1 &'
+            elif(getAction(action) == 'down'):
+                    maxX = 'yP < '+str(yMap-2) + ' & '
+            first_part += '('+minX+maxX+minY+maxY+' xG0= (xP' + str(getSign((ghost1X-(ARRAY_FIELD_SIZE_X/2)))) +') & yG0= (yP'+ str(getSign((ghost1Y-(ARRAY_FIELD_SIZE_Y/2)))) +')'
+            first_part += ' & (xP > 0) & (xP < ' + str(xMap) + ') & (yP > 0) & (yP < ' + str(yMap) + ')'
+            first_part += ' & (xG0 > 0) & (xG0 < ' + str(xMap) + ') & (yG0 > 0) & (yG0 < ' + str(yMap) + ')'
+            first_part_end = ") -> "
+            line = "";
+            for g1 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
+                prob = str(rond(float(averagesGhosts[g1][ghost1X][ghost1Y][0])))
+                if (prob != "0.0"):
+                    line += prob +': ' + str(getMovement(action, g1, 0, ghost1X, ghost1Y))
+                    line += " + "
+            if (len(line) > 0):
+                print(first_part, end='')
+                print(first_part_end, end='')
+                print(line[:-3], end='')
+                print(";")
 
-                first_part += '(xG0= (xP' + str(getSign((ghost1X-(ARRAY_FIELD_SIZE_X/2)))) +') & yG0= (yP'+ str(getSign((ghost1Y-(ARRAY_FIELD_SIZE_Y/2)))) +')'
-                first_part += ' & (xP > 0) & (xP < ' + str(xMap) + ') & (yP > 0) & (yP < ' + str(yMap) + ')'
-                first_part += ' & (xG0 > 0) & (xG0 < ' + str(xMap) + ') & (yG0 > 0) & (yG0 < ' + str(yMap) + ')'
-                first_part_end = ") -> "
-                line = "";
-                for g1 in range(0, POSSIBLE_MOVEMENTS_IN_A_2DIMENSIONAL_WORLD):
-                    prob = str(rond(float(averagesGhosts[g1][ghost1X][ghost1Y][0])))
-                    if (prob != "0.0"):
-                        line += prob +': ' + str(getMovement(action, g1, 0, ghost1X, ghost1Y))
-                        line += " + "
-                if (len(line) > 0):
-                    print(first_part, end='')
-                    print(first_part_end, end='')
-                    print(line[:-3], end='')
-                    print(";")
 
 
 
