@@ -5,10 +5,10 @@ const ySize =7;
 
 module pacman
 
-	xG0 : [0..xSize] init 7; // x position of Ghost0
+	xG0 : [0..xSize] init 5; // x position of Ghost0
 	yG0 : [0..ySize] init 1; // y position of Ghost0
-	xP : [0..xSize] init 2; // x position of Pacman
-	yP : [0..ySize] init 1; // y position of Pacman
+	xP : [0..xSize] init 9; // x position of Pacman
+	yP : [0..ySize] init 5; // y position of Pacman
 
 [up] (yP > 1 & xG0= (xP -8) & yG0= (yP -4) & (xP > 0) & (xP < 11) & (yP > 0) & (yP < 7) & (xG0 > 0) & (xG0 < 11) & (yG0 > 0) & (yG0 < 7)) -> 0.666667: (yP' = yP-1) & (yG0' = yG0-1) + 0.333333: (yP' = yP-1) & (xG0' = xG0+1);
 [down] (yP < 5 &  xG0= (xP -8) & yG0= (yP -4) & (xP > 0) & (xP < 11) & (yP > 0) & (yP < 7) & (xG0 > 0) & (xG0 < 11) & (yG0 > 0) & (yG0 < 7)) -> 0.666667: (yP' = yP+1) & (yG0' = yG0-1) + 0.333333: (yP' = yP+1) & (xG0' = xG0+1);
